@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "watch": "tailwindcss -i staticfiles/src/input.css -o staticfiles/src/output.css --watch",
+    "build": "tailwindcss -i staticfiles/src/input.css  -o static/src/output.css --build --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "tailwindcss": "^3.4.17"
+  },
+  "dependencies": {
+    "preline": "^3.0.1"
+  }
+}

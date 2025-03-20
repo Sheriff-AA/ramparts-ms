@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Rampart Celtics</title>
+        <meta name="description" content="Rampart Celtic Official Website" />
+        <link
+            rel="shortcut icon"
+            href="{% static 'assets/logo.png' %}"
+            type="image/x-icon"
+        />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:title" content="Rampart Celtic" />
+        <meta property="og:description" content="Rampart Celtic Official Website" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://sherifproductions.com" />
+        <meta property="og:image" content="" />
+
+
+        {% include 'base/css.html' %}
+        {% include 'base/navbar.html' %}
+    </head>
+
+    <body class="min-h-[100vh] bg-gray-200 font-mono antialiased">
+        {% block content %}
+
+        {% endblock content %}
+        {% include 'base/footer.html' %}
+    </body>
+        {% include 'base/js.html' %}
+</html>
+
