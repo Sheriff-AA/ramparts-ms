@@ -11,7 +11,7 @@
         <meta name="description" content="Rampart Celtic Official Website" />
         <link
             rel="shortcut icon"
-            href="{% static 'assets/logo.png' %}"
+            href="{% static 'assets/images/rampart.png' %}"
             type="image/x-icon"
         />
 
@@ -42,16 +42,16 @@
         <link rel="stylesheet" href="https://preline.co/assets/css/main.min.css">
 
         {% include 'base/css.html' %}
-        {% include 'base/navbar.html' %}
     </head>
 
-    <body class="dark:bg-neutral-900">
-        {% block content %}
+    {% block content %}
 
-        {% endblock content %}
-        {% include 'base/footer.html' %}
-    </body>
-        {% include 'base/js.html' %}
-        <script src="https://cdn.jsdelivr.net/npm/preline/dist/index.js"></script>
+    
+    {% endblock content %}
+    
+
+    {% include 'base/js.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/index.js"></script>
+
 </html>
 

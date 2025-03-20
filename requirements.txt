@@ -7,3 +7,4 @@ python-decouple
 gunicorn
 django-htmx
 psycopg2
+django-compressor
