@@ -1,2 +1,9 @@
 Django==4.2.19
 requests
+whitenoise
+dj-database-url
+psycopg[binary]
+python-decouple
+gunicorn
+django-htmx
+psycopg2
