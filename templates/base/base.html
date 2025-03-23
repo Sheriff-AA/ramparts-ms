@@ -39,9 +39,8 @@
             else if (isLightOrAuto && !html.classList.contains('light')) html.classList.add('light');
         </script>
 
-        <link rel="stylesheet" href="https://preline.co/assets/css/main.min.css">
+        {% comment %} <link rel="stylesheet" href="https://preline.co/assets/css/main.min.css"> {% endcomment %}
 
-        {% include 'base/css.html' %}
     </head>
 
     {% block content %}
@@ -50,8 +49,7 @@
     {% endblock content %}
     
 
-    {% include 'base/js.html' %}
-    <script src="https://cdn.jsdelivr.net/npm/preline/dist/index.js"></script>
+    {% comment %} <script src="https://cdn.jsdelivr.net/npm/preline/dist/index.js"></script> {% endcomment %}
 
 </html>
 
