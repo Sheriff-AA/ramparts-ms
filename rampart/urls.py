@@ -19,9 +19,14 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", 
-         TemplateView.as_view(template_name="base/landing_page.html"), name="home_page"
-         ),
+        TemplateView.as_view(template_name="base/landing_page.html"), name="home_page"
+        ),
+    path("404/", 
+        TemplateView.as_view(template_name="base/404.html"), name="error_page"
+        ),
 ]
+
