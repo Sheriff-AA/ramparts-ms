@@ -52,6 +52,7 @@ EVENT_CHOICES = (
 class Player(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100, blank=True, verbose_name="Preferred Name")
     slug = models.SlugField(null=True, blank=True, unique=True)
     position = models.CharField(max_length=30, blank=True, choices=PLAYER_POSITION)
 
@@ -70,9 +71,9 @@ class Match(models.Model):
     match_date = models.DateTimeField()
     slug = models.SlugField(null=True, blank=True, unique=True)
     competition = models.ForeignKey("Competition", on_delete=models.CASCADE)
-    line_up = models.ManyToManyField(Player, related_name="matches_as_starter", blank=True)
-    substitutes = models.ManyToManyField(Player, related_name="matches_as_substitute", blank=True)
-    max_substitutions = 5
+    line_up = models.JSONField(default=list, blank=True)
+    substitutes = models.JSONField(default=list, blank=True)
+    # max_substitutions = 5
     
 
     is_fixture = models.BooleanField(default=True)
@@ -100,9 +101,9 @@ class Match(models.Model):
         if self.line_up.count() > 11:
             raise ValidationError("A starting lineup can have at most 11 players.")
         
-        overlap = set(self.line_up.all()) & set(self.substitutes.all())
+        overlap = set(self.line_up) & set(self.substitutes)
         if overlap:
-            raise ValidationError(f"Players {', '.join([p.name for p in overlap])} cannot be both in line-up and substitutes.")
+            raise ValidationError(f"Players {', '.join(overlap)} cannot be both in line-up and substitutes.")
     
 
 class Result(models.Model):
