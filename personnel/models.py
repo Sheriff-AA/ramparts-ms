@@ -35,7 +35,6 @@ COMPETITION_CHOICES = (
     ("Training", "Training"),
 )
 
-
 MINUTES_CHOICES = [(i, f"{i}'") for i in range(1, 121)]
 
 EVENT_CHOICES = (
@@ -121,6 +120,80 @@ class Competition(models.Model):
 
     def __str__(self):
         return f"{self.category} - {self.year}"
+
+
+class MatchEvent(models.Model):
+    EVENT_TYPES = [
+        ("goal", "Goal"),
+        ("assist", "Assist"),
+        ("yellow_card", "Yellow Card"),
+        ("red_card", "Red Card"),
+        ("substitution", "Substitution"),
+        ("foul", "Foul"),
+        ("penalty", "Penalty"),
+        ("own_goal", "Own Goal"),
+    ]
+
+    match = models.ForeignKey("Match", on_delete=models.CASCADE, related_name="events")
+    player = models.CharField(max_length=255, blank=False, null=False)
+    event_type = models.CharField(max_length=50, choices=EVENT_TYPES, blank=False, null=False)
+    minute = models.PositiveIntegerField(choices=MINUTES_CHOICES, blank=False, null=False)
+    additional_info = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ["minute"]
+
+    def __str__(self):
+        return f"{self.get_event_type_display()} by {self.player} at {self.minute}’ in match {self.match}" 
+
+    def clean(self):
+        """
+        Ensures that the player exists in the lineup or substitutes of the match.
+        Ensures that event minutes are within a valid range.
+        """
+        allowed_players = set(self.match.line_up + self.match.substitutes)
+        if self.player not in allowed_players:
+            raise ValidationError(f"Player {self.player} is not in the lineup or substitutes for this match.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+        self.update_player_stats()
+
+    def update_player_stats(self):
+        """
+        Updates or creates player statistics based on match events.
+        """
+        player_stat, created = PlayerStat.objects.get_or_create(match=self.match, player=self.player)
+        
+        event_counts = MatchEvent.objects.filter(match=self.match, player=self.player).values("event_type").annotate(count=models.Count("event_type"))
+        event_dict = {event["event_type"]: event["count"] for event in event_counts}
+
+        player_stat.goals = event_dict.get("goal", 0)
+        player_stat.assists = event_dict.get("assist", 0)
+        player_stat.yellow_cards = event_dict.get("yellow_card", 0)
+        player_stat.red_cards = event_dict.get("red_card", 0)
+        player_stat.own_goals = event_dict.get("own_goal", 0)
+        player_stat.penalties_scored = event_dict.get("penalty", 0)
+        
+        player_stat.save()
+
+
+class PlayerStat(models.Model):
+    match = models.ForeignKey("Match", on_delete=models.CASCADE, related_name="player_stats")
+    player = models.CharField(max_length=255, blank=False, null=False)  # Store player reference as a string
+    goals = models.PositiveIntegerField(default=0)
+    assists = models.PositiveIntegerField(default=0)
+    yellow_cards = models.PositiveIntegerField(default=0)
+    red_cards = models.PositiveIntegerField(default=0)
+    own_goals = models.PositiveIntegerField(default=0)
+    penalties_scored = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('match', 'player')
+
+    def __str__(self):
+        return f"Stats for {self.player} in match {self.match}"
 
 
 # class Formation(models.Model):

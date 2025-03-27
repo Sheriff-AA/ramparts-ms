@@ -1,5 +1,5 @@
 from django import forms
-from personnel.models import Match, Player
+from personnel.models import Match, Player, MatchEvent
 from django.core.exceptions import ValidationError
 
 
@@ -46,4 +46,28 @@ class MatchForm(forms.ModelForm):
         if commit:
             match.save()
         return match
+
+
+class MatchEventForm(forms.ModelForm):
+    class Meta:
+        model = MatchEvent
+        fields = ["match", "player", "event_type", "minute", "additional_info"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.match:
+            allowed_players = self.instance.match.line_up + self.instance.match.substitutes
+            self.fields["player"].widget = forms.Select(choices=[(p, p) for p in allowed_players])
+
+    def clean_player(self):
+        player = self.cleaned_data.get("player")
+        match = self.cleaned_data.get("match")
+
+        if match:
+            allowed_players = set(match.line_up + match.substitutes)
+            if player not in allowed_players:
+                raise ValidationError(f"Player {player} is not in the lineup or substitutes for this match.")
+
+        return player
+
 
