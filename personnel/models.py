@@ -32,7 +32,6 @@ COMPETITION_CHOICES = (
     ("Cup", "Cup"),
     ("Friendly", "Friendly"),
     ("Tournament", "Tournament"),
-    ("Training", "Training"),
 )
 
 MINUTES_CHOICES = [(i, f"{i}'") for i in range(1, 121)]
@@ -69,7 +68,7 @@ class Match(models.Model):
     venue = models.CharField(max_length=20, blank=False, null=False)
     match_date = models.DateTimeField()
     slug = models.SlugField(null=True, blank=True, unique=True)
-    competition = models.ForeignKey("Competition", on_delete=models.CASCADE)
+    competition = models.ForeignKey("Competition", on_delete=models.CASCADE, related_name="matches")
     line_up = models.JSONField(default=list, blank=True)
     substitutes = models.JSONField(default=list, blank=True)
     # max_substitutions = 5
@@ -117,6 +116,7 @@ class Result(models.Model):
 class Competition(models.Model):
     category = models.CharField(max_length=120, choices=COMPETITION_CHOICES)
     year = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.category} - {self.year}"

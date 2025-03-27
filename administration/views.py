@@ -24,3 +24,4 @@ class CompetitionCreateView(generic.CreateView):
     def form_invalid(self, form):
         messages.error(self.request, "Error creating competition.")
         return super().form_invalid(form)
+    

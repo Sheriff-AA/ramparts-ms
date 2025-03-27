@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 """
 BASE ENDPOINT /
 """
-app_name = "personnel"
+app_name = "matches"
 
 
 urlpatterns = [

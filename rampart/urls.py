@@ -28,5 +28,8 @@ urlpatterns = [
     path("404/", 
         TemplateView.as_view(template_name="base/404.html"), name="error_page"
         ),
+    path("administration/", include("administration.urls"), name="administration"),
+    path("matches/", include("matches.urls"), name="matches"),
+    path("personnel/", include("personnel.urls"), name="personnel"),
 ]
 
