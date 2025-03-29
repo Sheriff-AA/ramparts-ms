@@ -12,7 +12,7 @@
 
         <!-- Card -->
         <div class="mt-5 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
-        <form method="post" hx-post="{% url 'administration:create-player' %}" hx-target="#dashboard-content" hx-swap="outerHTML">
+        <form method="post" hx-post="{% url 'administration:create-player' %}" hx-target="#dashboard-content" hx-swap="innerHTML">
             {% csrf_token %}
             <div class="mb-4 sm:mb-8">
             <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Category</label>
