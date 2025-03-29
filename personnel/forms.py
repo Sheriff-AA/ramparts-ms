@@ -9,13 +9,13 @@ from utils.current_year import current_year
 def year_choices():
     return [(r,r) for r in range(2006, datetime.date.today().year+1)]
 
-class PlayerForm(forms.ModelForm):
+class PlayerCreateForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = ['first_name', 'last_name', 'name', 'position']
 
 
-class CompetitionForm(forms.ModelForm):
+class CompetitionCreateForm(forms.ModelForm):
     year = forms.TypedChoiceField(coerce=int, choices=year_choices, initial=current_year)
 
     class Meta:

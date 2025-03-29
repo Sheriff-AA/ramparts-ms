@@ -48,6 +48,11 @@ EVENT_CHOICES = (
     ('FULLTIME', 'Fulltime'),
 )
 
+BOOLEAN_CHOICES = (
+    ('YES', 'Yes'),
+    ('NO', 'No'),
+)
+
 
 class Player(models.Model):
     first_name = models.CharField(max_length=50)
@@ -78,7 +83,7 @@ class Match(models.Model):
 
     is_fixture = models.BooleanField(default=True)
     has_result = models.BooleanField(default=False)
-    away_fixture = models.BooleanField(default=False)
+    away_fixture = models.CharField(max_length=10, choices=BOOLEAN_CHOICES, default="NO")
 
     class Meta:
         # unique_together = ['match_date']

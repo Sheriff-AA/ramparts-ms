@@ -8,8 +8,8 @@ from django.views import View
 
 
 from personnel.models import Player, Match, MatchEvent, Competition, Result 
-from matches.forms import MatchForm, MatchEventForm
-from personnel.forms import PlayerForm, CompetitionForm
+from matches.forms import MatchCreateForm, MatchEventCreateForm
+from personnel.forms import PlayerCreateForm, CompetitionCreateForm
 
 
 class DashboardHomeView(generic.TemplateView):
@@ -25,12 +25,12 @@ class DashboardHomeView(generic.TemplateView):
 
 
 class CompetitionCreateView(View):
-    template_name = "administration/competition_form.html"  # The partial
-    dashboard_template = "administration/dashboard.html"  # The full dashboard page
+    template_name = "administration/competition_form.html"
+    dashboard_template = "administration/dashboard.html" 
 
     def get(self, request, *args, **kwargs):
         """Return the correct response depending on whether the request is from HTMX."""
-        context = {"form": CompetitionForm()}
+        context = {"form": CompetitionCreateForm()}
 
         if request.htmx:
             return render(request, self.template_name, context)
@@ -39,25 +39,26 @@ class CompetitionCreateView(View):
 
     def post(self, request, *args, **kwargs):
         """Handle form submission while keeping the dashboard layout intact."""
-        form = CompetitionForm(request.POST)
+        form = CompetitionCreateForm(request.POST)
         context = {"form": form}
 
         if form.is_valid():
             form.save()
             messages.success(request, "Competition created successfully.")
-            context["form"] = CompetitionForm()  # Reset form after success
+            context["form"] = CompetitionCreateForm()  # Reset
 
-            # if request.htmx:
-            #     return render(request, self.template_name, context)
+            if request.htmx:
+                return render(request, self.template_name, context)
             
             return render(request, self.dashboard_template, {
                 "content": self.template_name,
                 **context,
             })
         
-        # if request.htmx:
-        #     return render(request, self.template_name, context)
-        messages.error(self.request, "Error adding player.")
+        messages.error(self.request, "Error adding competition.")
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
         return render(request, self.dashboard_template, {
             "content": self.template_name,
             **context,
@@ -66,7 +67,7 @@ class CompetitionCreateView(View):
 
 class PlayerCreateView(generic.CreateView):
     model = Player
-    form_class = PlayerForm
+    form_class = PlayerCreateForm
     template_name = 'administration/create_player.html'
     success_url = '/administration/'
 
@@ -79,16 +80,43 @@ class PlayerCreateView(generic.CreateView):
         return super().form_invalid(form)
     
 
-class MatchCreateView(generic.CreateView):
-    model = Match
-    form_class = MatchForm
-    template_name = 'administration/create_match.html'
-    success_url = '/administration/'
+class MatchCreateView(View):
+    template_name = "administration/create_match.html"
+    dashboard_template = "administration/dashboard.html" 
 
-    def form_valid(self, form):
-        messages.success(self.request, "Match added successfully.")
-        return super().form_valid(form)
+    def get(self, request, *args, **kwargs):
+        """Return the correct response depending on whether the request is from HTMX."""
+        context = {"form": MatchCreateForm()}
 
-    def form_invalid(self, form):
-        # messages.error(self.request, "Error creating competition.")
-        return super().form_invalid(form)
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.dashboard_template, {"content": self.template_name, **context})
+
+    def post(self, request, *args, **kwargs):
+        """Handle form submission while keeping the dashboard layout intact."""
+        form = MatchCreateForm(request.POST)
+        context = {"form": form}
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Match created successfully.")
+            context["form"] = MatchCreateForm()  # Reset
+
+            if request.htmx:
+                return render(request, self.template_name, context)
+            
+            return render(request, self.dashboard_template, {
+                "content": self.template_name,
+                **context,
+            })
+        
+        messages.error(self.request, "Error creating match.")
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.dashboard_template, {
+            "content": self.template_name,
+            **context,
+        })
+    
