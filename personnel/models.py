@@ -1,8 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from utils.generators import unique_slugify
 from utils.generic_numgen import unique_gen
+from utils.current_year import current_year
 
 
 PLAYER_POSITION = (
@@ -80,7 +82,8 @@ class Match(models.Model):
 
     class Meta:
         # unique_together = ['match_date']
-        ordering = ['match_date']    
+        ordering = ['match_date']
+        verbose_name_plural = "Matches"
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -111,12 +114,18 @@ class Result(models.Model):
 
     def __str__(self):
         return f"{self.match}: {self.opposition_score} - {self.team_score}"
-    
+
+def max_value_current_year(value):
+    return MaxValueValidator(current_year())(value)  
 
 class Competition(models.Model):
     category = models.CharField(max_length=120, choices=COMPETITION_CHOICES)
-    year = models.IntegerField()
+    year = models.IntegerField(validators=[MinValueValidator(2006), max_value_current_year])
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['category', 'year']
+        ordering = ['year']
 
     def __str__(self):
         return f"{self.category} - {self.year}"
@@ -142,6 +151,8 @@ class MatchEvent(models.Model):
 
     class Meta:
         ordering = ["minute"]
+        verbose_name_plural = "Match Events"
+        unique_together = ('match', 'player', 'event_type', 'minute')
 
     def __str__(self):
         return f"{self.get_event_type_display()} by {self.player} at {self.minute}’ in match {self.match}" 
@@ -191,6 +202,7 @@ class PlayerStat(models.Model):
 
     class Meta:
         unique_together = ('match', 'player')
+        verbose_name_plural = "Player Statistics"
 
     def __str__(self):
         return f"Stats for {self.player} in match {self.match}"

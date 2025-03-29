@@ -17,3 +17,10 @@
     else if (isLightOrAuto && !html.classList.contains('light')) html.classList.add('light');
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      window.addEventListener("popstate", function(event) {
+          htmx.ajax('GET', window.location.pathname, { target: "#dashboard-content" });
+      });
+  });
+</script>
