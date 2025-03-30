@@ -65,19 +65,45 @@ class CompetitionCreateView(View):
         })
 
 
-class PlayerCreateView(generic.CreateView):
-    model = Player
-    form_class = PlayerCreateForm
-    template_name = 'administration/create_player.html'
-    success_url = '/administration/'
+class PlayerCreateView(View):
+    template_name = "administration/create_player.html"
+    dashboard_template = "administration/dashboard.html" 
 
-    def form_valid(self, form):
-        messages.success(self.request, "Player added successfully.")
-        return super().form_valid(form)
+    def get(self, request, *args, **kwargs):
+        """Return the correct response depending on whether the request is from HTMX."""
+        context = {"form": PlayerCreateForm()}
 
-    def form_invalid(self, form):
-        # messages.error(self.request, "Error adding player.")
-        return super().form_invalid(form)
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.dashboard_template, {"content": self.template_name, **context})
+
+    def post(self, request, *args, **kwargs):
+        """Handle form submission while keeping the dashboard layout intact."""
+        form = PlayerCreateForm(request.POST)
+        context = {"form": form}
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Player added successfully.")
+            context["form"] = PlayerCreateForm()  # Reset
+
+            if request.htmx:
+                return render(request, self.template_name, context)
+            
+            return render(request, self.dashboard_template, {
+                "content": self.template_name,
+                **context,
+            })
+        
+        messages.error(self.request, "Error adding player.")
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.dashboard_template, {
+            "content": self.template_name,
+            **context,
+        })
     
 
 class MatchCreateView(View):

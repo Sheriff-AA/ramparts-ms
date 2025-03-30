@@ -15,18 +15,34 @@
         <form method="post" hx-post="{% url 'administration:create-player' %}" hx-target="#dashboard-content" hx-swap="innerHTML">
             {% csrf_token %}
             <div class="mb-4 sm:mb-8">
-            <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Category</label>
-            {{ form.category}}
-                {% if form.category.errors %}
-                    <p class="text-sm text-red-500">{{ form.category.errors.as_text }}</p>
+            <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">First Name</label>
+            {{ form.first_name}}
+                {% if form.first_name.errors %}
+                    <p class="text-sm text-red-500">{{ form.first_name.errors.as_text }}</p>
                 {% endif %}
             </div>
 
             <div class="mb-4 sm:mb-8">
-            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Year</label>
-            {{ form.year }}
-                {% if form.year.errors %}
-                    <p class="text-sm text-red-500">{{ form.year.errors.as_text }}</p>
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Last Name</label>
+            {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <p class="text-sm text-red-500">{{ form.last_name.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Preferred Name</label>
+            {{ form.name }}
+                {% if form.name.errors %}
+                    <p class="text-sm text-red-500">{{ form.name.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Position</label>
+            {{ form.position }}
+                {% if form.position.errors %}
+                    <p class="text-sm text-red-500">{{ form.position.errors.as_text }}</p>
                 {% endif %}
             </div>
 

@@ -59,7 +59,13 @@ class Player(models.Model):
     last_name = models.CharField(max_length=50)
     name = models.CharField(max_length=100, blank=True, verbose_name="Preferred Name")
     slug = models.SlugField(null=True, blank=True, unique=True)
-    position = models.CharField(max_length=30, blank=True, choices=PLAYER_POSITION)
+    position = models.CharField(max_length=30, blank=True, choices=PLAYER_POSITION, default="GK")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['last_name']
+        verbose_name_plural = "Players"
+        unique_together = ['first_name', 'last_name']
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
