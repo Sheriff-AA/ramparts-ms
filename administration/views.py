@@ -146,3 +146,38 @@ class MatchCreateView(View):
             **context,
         })
     
+
+class PlayerListView(generic.ListView):
+    model = Player
+    template_name = 'players/player_list.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(
+                Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(name__icontains=query)
+            )
+        return queryset
+    
+    def get(self, request, *args, **kwargs):
+        search = request.GET.get('search')
+        qs = self.get_queryset()
+        if search:
+            qs = self.get_queryset().filter(Q(first_name__icontains=search) | Q(last_name__icontains=search))
+
+        paginator = Paginator(qs, 15)
+        page_number = request.GET.get("page")
+        qs = paginator.get_page(page_number)
+
+        context = {
+            'players_qs': qs,
+        }
+
+        if request.htmx:
+            return render(request, self.template_name, **context)
+        else:
+            return render(request, 'administration/dashboard.html', {"content": self.template_name, **context} )
+    
+    
+    
