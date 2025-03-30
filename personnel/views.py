@@ -8,4 +8,21 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 
-# Create your views here.
+
+from personnel.models import Player, Match, MatchEvent, Competition, Result
+
+
+class DisplayPlayersListView(generic.ListView):
+    model = Player
+    template_name = 'players/squad_display.html'
+    context_object_name = 'players'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(
+                Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(name__icontains=query)
+            )
+        return queryset
+    

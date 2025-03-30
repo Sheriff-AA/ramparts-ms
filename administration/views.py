@@ -175,7 +175,7 @@ class PlayerListView(generic.ListView):
         }
 
         if request.htmx:
-            return render(request, self.template_name, **context)
+            return render(request, self.template_name, {**context})
         else:
             return render(request, 'administration/dashboard.html', {"content": self.template_name, **context} )
     

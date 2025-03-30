@@ -5,7 +5,7 @@
 <header class="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3 dark:bg-neutral-800">
     <nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
         <div class="flex items-center justify-between">
-            <a class="flex-none text-xl font-semibold dark:text-white focus:outline-hidden focus:opacity-80" href="#" aria-label="Brand">
+            <a class="flex-none text-xl font-semibold dark:text-white focus:outline-hidden focus:opacity-80" href="{% url 'home-page' %}" aria-label="Brand">
                 <span class="inline-flex items-center gap-x-2 text-xl font-semibold dark:text-white">
                 <img class="w-10 h-auto" src="{% static 'assets/images/rampart.png' %}" alt="Logo">
                 Rampart Celtic
@@ -55,8 +55,8 @@
                     </div>
                 </div>
 
-                <a class="font-medium text-blue-500 focus:outline-hidden" href="#" aria-current="page">Landing</a>
-                <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500" href="#">Squad</a>
+                <a class="font-medium text-blue-500 focus:outline-hidden" href="{% url 'home-page' %}" aria-current="page">Home</a>
+                <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500" href="{% url 'personnel:players-list' %}">Squad</a>
                 <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500" href="#">Games</a>
                 <a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 dark:focus:text-neutral-500" href="{% url 'administration:dashboard-home' %}">Dashboard</a>
             </div>
