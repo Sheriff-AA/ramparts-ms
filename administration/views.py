@@ -179,5 +179,91 @@ class PlayerListView(generic.ListView):
         else:
             return render(request, 'administration/dashboard.html', {"content": self.template_name, **context} )
     
+
+class MatchListView(generic.ListView):
+    template_name = "matches/match_list.html"
+    context_object_name = "matches"
+
+    def get_queryset(self):
+        return Match.objects.all().order_by('id')
     
+    def manual_pagination(self, request, queryset):
+        queryset_paginator = Paginator(queryset, 25)
+        queryset_page_number = request.GET.get("page")
+        return queryset_paginator.get_page(queryset_page_number)
+    
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data()
+        search = request.GET.get('search', None)
+        date = request.GET.get('match_date', None)
+        list_type = self.request.GET.get("list_type", "results")
+
+        if list_type == "fixtures":
+            queryset = Match.objects.filter(is_fixture=True).order_by('match_date')
+        else:
+            queryset = Result.objects.all().order_by('-match__match_date')
+
+        if search:
+            if list_type == "fixtures":
+                queryset = queryset.filter(Q(opposition_team__icontains=search))
+            else:
+                queryset = queryset.filter(Q(match__opposition_team__contains=search))
+        if date:
+            if list_type == "fixtures":
+                queryset = queryset.filter(Q(match_date__date=date))
+            else:
+                queryset = queryset.filter(Q(match__match_date__date=date))
+
+        
+        queryset = self.manual_pagination(request, queryset)
+
+        context.update({
+            "queryset": queryset,
+            "list_type": list_type,
+            "search": self.request.GET.get("search", None),
+        })
+
+        if request.htmx:
+            template_name = 'matches/match_list.html'
+            if search or date:  
+                template_name = 'matches/partials/partial_match_list.html'
+                
+            return render(request, template_name, context)
+        else:
+            template_name = 'administration/dashboard.html'
+            context['content'] = 'matches/match_list.html'
+
+            return render(request, template_name, context)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(MatchListView, self).get_context_data(**kwargs)
+
+    #     list_type = self.request.GET.get("list_type", "results")
+
+    #     if list_type == "fixtures":
+    #         queryset = Match.objects.filter(is_fixture=True).order_by('match_date')
+    #     else:
+    #         queryset = Result.objects.all().order_by('-match__match_date')
+
+    #     context.update({
+    #         "queryset": queryset,
+    #         "list_type": list_type,
+    #         "search": self.request.GET.get("search", None),
+    #     })
+
+    #     return context
+    
+class MatchDetailView(generic.DetailView):
+    model = Match
+    template_name = "matches/match_detail.html"
+    context_object_name = "match"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        match = self.get_object()
+        match_events = MatchEvent.objects.filter(match=match).order_by('event_time')
+        context['match_events'] = match_events
+        context['form'] = MatchEventCreateForm(initial={'match': match})
+        return context
     

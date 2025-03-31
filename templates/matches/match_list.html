@@ -1,0 +1,18 @@
+
+<div id="matches-list" class="container px-5 py-6 mx-auto">
+    <div class="flex flex-col text-center w-full mb-10">
+        <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">Fixtures and Results</h1>
+    </div>
+
+    <div class = "mb-5">
+        <button name="list_type" id="fixtures-btn" value="fixtures" hx-get="{% url 'administration:match-list' %}" hx-trigger="click" hx-target="#matches-list" hx-swap="outerHTML" hx-push-url="true" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 hover:text-black rounded text-base mt-4 md:mt-0 mr-5">Fixtures</button>
+        <button name="list_type" id="results-btn" value="results" hx-get="{% url 'administration:match-list' %}" hx-trigger="click" hx-target="#matches-list" hx-swap="outerHTML" hx-push-url="true" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 hover:text-black rounded text-base mt-4 md:mt-0">Results</button>
+    </div>
+
+    <div>
+        {% include 'matches/partials/partial_match_list.html' %}
+    </div>  
+</div>
+
+
+
