@@ -13,7 +13,7 @@
         </div>
 
         <!-- Card -->
-        <div class="mt-5 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+        <div class="mt-5 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
         <form method="post" hx-post="{% url 'administration:create-match' %}" hx-target="#dashboard-content" hx-swap="innerHTML">
             {% csrf_token %}
             <div class="mb-4 sm:mb-8">
@@ -57,7 +57,7 @@
             </div>
             
             <div class="mb-4 sm:mb-8">
-            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Possible Lineup
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Possible Lineup</label>
             {{ form.selected_line_up }}
                 {% if form.selected_line_up.errors %}
                     <p class="text-sm text-red-500">{{ form.selected_line_up.errors.as_text }}</p>
