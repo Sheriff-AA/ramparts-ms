@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views import generic, View
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,7 +8,7 @@ from django.contrib import messages
 
 from personnel.models import Player, Match, MatchEvent, Competition, Result 
 from matches.forms import MatchCreateForm, MatchEventCreateForm
-from personnel.forms import PlayerCreateForm, CompetitionCreateForm
+from personnel.forms import PlayerCreateForm, CompetitionCreateForm, PlayerUpdateForm
 
 
 class DashboardHomeView(generic.TemplateView):
@@ -103,6 +103,84 @@ class PlayerCreateView(View):
             "content": self.template_name,
             **context,
         })
+    
+
+class PlayerDeleteConfirmView(View):
+    template_name = "administration/confirm_delete_player.html"
+    dashboard_template = "administration/dashboard.html"
+    
+    def get(self, request, *args, **kwargs):
+        """Display confirmation page for deleting a player."""
+        player = get_object_or_404(Player, slug=self.kwargs["slug"])
+        
+        context = {
+            "player": player,
+        }
+        
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.dashboard_template, {"content": self.template_name, **context})
+
+
+class PlayerUpdateView(generic.UpdateView):
+    template_name = "players/player_update.html"
+    form_class = PlayerUpdateForm
+    context_object_name = "player"
+
+    def get_queryset(self):
+        player = Player.objects.filter(slug=self.kwargs.get('slug'))
+        return player
+        
+    def get_object(self, queryset=None):
+        """
+        TBA
+        """
+        obj = Player.objects.get(slug=self.kwargs.get('slug'))
+        return obj
+        
+    def get_success_url(self):
+        obj = Player.objects.get(slug=self.kwargs.get('slug'))
+        messages.success(self.request, f"Player '{obj.name}' updated successfully.")
+        return reverse("administration:players-list")
+    
+
+class PlayerDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        """Handle the actual deletion after confirmation."""
+        player = get_object_or_404(Player, slug=self.kwargs["slug"])
+        # player_slug = player.slug
+        
+        # Store details for success message
+        player_details = f"{player.first_name} {player.last_name}"
+        
+        # Delete the event
+        player.delete()
+        
+        messages.success(request, f"Player '{player_details}' deleted successfully.")
+        
+        # Redirect back to the match page
+        return redirect('administration:players-list')
+    
+
+class PlayerDetailView(generic.DetailView):
+    template_name = "players/player_detail.html"
+    context_object_name = "player"
+
+    def get_queryset(self):
+        return Player.objects.all()
+    
+    def get(self, request, *args, **kwargs):
+        """Return the correct response depending on whether the request is from HTMX."""
+        player = Player.objects.get(slug=self.kwargs['slug'])
+        context = {"player": player}
+
+        dashboard_template = "administration/dashboard.html" 
+
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, dashboard_template, {"content": self.template_name, **context})
     
 
 class MatchCreateView(View):

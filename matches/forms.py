@@ -47,20 +47,38 @@ class MatchCreateForm(forms.ModelForm):
             }),
         }
 
+    def clean_selected_line_up(self):
+        line_up = self.cleaned_data.get('selected_line_up', [])
+        substitutes = self.cleaned_data.get('selected_substitutes', [])
+        
+        if len(line_up) > 11:
+            raise ValidationError("A starting lineup can have at most 11 players.")
+        
+        overlap = set(line_up) & set(substitutes)
+        if overlap:
+            raise ValidationError(f"Players {', '.join([p.name for p in overlap])} cannot be both in lineup and substitutes.")
+        
+        return line_up
+    
+    def clean_selected_substitutes(self):
+        substitutes = self.cleaned_data.get('selected_substitutes', [])
+        line_up = self.cleaned_data.get('selected_line_up', [])
+
+        overlap = set(line_up) & set(substitutes)
+        if overlap:
+            raise ValidationError(f"Players {', '.join([p.name for p in overlap])} cannot be both in lineup and substitutes.")
+        
+        return substitutes
+
+
     def clean(self):
         """Perform the same validations as in the model"""
         cleaned_data = super().clean()
         line_up = cleaned_data.get('selected_line_up', [])
-        substitutes = cleaned_data.get('selected_substitutes', [])
 
         # Ensure lineup does not exceed 11 players
         if len(line_up) > 11:
             raise ValidationError("A starting lineup can have at most 11 players.")
-
-        # Ensure no player is in both lineup and substitutes
-        overlap = set(line_up) & set(substitutes)
-        if overlap:
-            raise ValidationError(f"Players {', '.join([p.name for p in overlap])} cannot be both in lineup and substitutes.")
 
         return cleaned_data
 
@@ -140,6 +158,5 @@ class MatchEventCreateForm(forms.ModelForm):
             instance.save()
         
         return instance
-
 
 
