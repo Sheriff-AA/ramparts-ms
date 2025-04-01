@@ -144,14 +144,14 @@ class Competition(models.Model):
 
 class MatchEvent(models.Model):
     EVENT_TYPES = [
-        ("goal", "Goal"),
-        ("assist", "Assist"),
-        ("yellow_card", "Yellow Card"),
-        ("red_card", "Red Card"),
-        ("substitution", "Substitution"),
-        ("foul", "Foul"),
-        ("penalty", "Penalty"),
-        ("own_goal", "Own Goal"),
+        ("Goal", "Goal"),
+        ("Assist", "Assist"),
+        ("Yellow Card", "Yellow Card"),
+        ("Red Card", "Red Card"),
+        ("Substitution", "Substitution"),
+        ("Foul", "Foul"),
+        ("Penalty", "Penalty"),
+        ("Own Goal", "Own Goal"),
     ]
 
     match = models.ForeignKey("Match", on_delete=models.CASCADE, related_name="events")

@@ -276,9 +276,11 @@ class MatchEventCreateView(View):
     def get(self, request, *args, **kwargs):
         """Return the correct response depending on whether the request is from HTMX."""
         match = get_object_or_404(Match, slug=self.kwargs["slug"])
+        match_event = match.events.all()
         context = {
             "form": MatchEventCreateForm(match=match),
-            "match": match
+            "match": match,
+            "match_events": match_event
             }
 
         if request.htmx:
@@ -289,8 +291,14 @@ class MatchEventCreateView(View):
     def post(self, request, *args, **kwargs):
         """Handle form submission while keeping the dashboard layout intact."""
         match = get_object_or_404(Match, slug=self.kwargs["slug"])
+        match_event = match.events.all()
+
         form = MatchEventCreateForm(request.POST, match=match)
-        context = {"form": form, "match": match}
+        context = {
+            "form": form, 
+            "match": match,
+            "match_events": match_event
+        }
 
         if form.is_valid():
             event = form.save()
