@@ -1,68 +1,68 @@
 {% if list_type == "results" %}
-    {% if queryset %}
-      <table class="table-auto w-full text-left whitespace-no-wrap">
-            <thead>
-            <tr>
-                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Home team</th>
-                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Away team</th>
-                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Scoreline</th>
-                <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Date</th>
-                <th class="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
-            </tr>
-            </thead>
-            {% for result in queryset %}
-            <tbody>
-            <tr>
-                {% if match.is_home %}
-                    <td class="px-3 py-3">
-                    <a href="{% url 'administration:match-details' result.match.slug %}">Rampart Celtic</a>
-                    </td>
-                    <td class="px-3 py-3">
-                    <a href="#">{{ result.match.opposition_team }}</a>
-                    </td>
-                    <td class="px-4 py-3">
-                        {% if result.opposition_score == result.team_score %}
-                            <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-gray-500"> D </span>
-                        {% elif result.team_score > result.opposition_score %}
-                            <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-green-500"> W </span>
-                        {% else %}
-                            <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-red-500"> L </span>
-                        {% endif %}
-                        {{ result.team_score }} : {{ result.opposition_score }}
-                    </td>
+  {% if queryset %}
+    <table class="table-auto w-full text-left whitespace-no-wrap">
+      <thead>
+      <tr>
+          <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Home team</th>
+          <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Away team</th>
+          <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Scoreline</th>
+          <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Date</th>
+          <th class="w-10 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
+      </tr>
+      </thead>
+      {% for result in queryset %}
+      <tbody>
+      <tr>
+        {% if match.is_home %}
+            <td class="px-3 py-3">
+            <a href="{% url 'administration:match-details' result.match.slug %}">Rampart Celtic</a>
+            </td>
+            <td class="px-3 py-3">
+            <a href="#">{{ result.match.opposition_team }}</a>
+            </td>
+            <td class="px-4 py-3">
+                {% if result.opposition_score == result.team_score %}
+                    <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-gray-500"> D </span>
+                {% elif result.team_score > result.opposition_score %}
+                    <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-green-500"> W </span>
                 {% else %}
-                    <td class="px-3 py-3">
-                    <a href="#">{{ result.match.opposition_team }}</a>
-                    </td>
-                    <td class="px-3 py-3">
-                    <a href="{% url 'administration:match-details' result.match.slug %}">Rampart Celtic</a>
-                    </td>
-                    <td class="px-4 py-3">
-                        {% if result.team_score == result.opposition_score %}
-                            <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-gray-500"> D </span>
-                        {% elif result.team_score > result.opposition_score %}
-                            <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-green-500"> W </span>
-                        {% else %}
-                            <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-red-500"> L </span>
-                        {% endif %}
-                            {{ result.opposition_score }} : {{ result.team_score }}
-                    </td>
+                    <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-red-500"> L </span>
                 {% endif %}
-                <td class="px-4 py-3 text-lg text-gray-900">
-                    {{ result.match.match_date|date:"F d, Y, h:i A" }}</td>
-                <td class="px-4 py-3 text-lg underline text-blue-900">
-                    <a href="{% url 'administration:match-details' result.match.slug %}">View</a>
-                </td>
-            </tr>
-            </tbody>
-            {% endfor %}
-      </table>
-    {% else %}
-      <div class="flex flex-col text-center w-full mb-10">
-          <p class="lg:w-2/3 mx-auto leading-relaxed text-base font-semibold">
-          NO RESULT AT THIS TIME...</p>
-      </div>
-    {% endif %}
+                {{ result.team_score }} : {{ result.opposition_score }}
+            </td>
+        {% else %}
+            <td class="px-3 py-3">
+            <a href="#">{{ result.match.opposition_team }}</a>
+            </td>
+            <td class="px-3 py-3">
+            <a href="{% url 'administration:match-details' result.match.slug %}">Rampart Celtic</a>
+            </td>
+            <td class="px-4 py-3">
+                {% if result.team_score == result.opposition_score %}
+                    <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-gray-500"> D </span>
+                {% elif result.team_score > result.opposition_score %}
+                    <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-green-500"> W </span>
+                {% else %}
+                    <span class="px-2 py-1 mx-2 font-semibold leading-tight text-white bg-red-500"> L </span>
+                {% endif %}
+                    {{ result.opposition_score }} : {{ result.team_score }}
+            </td>
+        {% endif %}
+        <td class="px-4 py-3 text-lg text-gray-900">
+          {{ result.match.match_date|date:"F d, Y, h:i A" }}</td>
+        <td class="px-4 py-3 text-lg underline text-blue-900">
+          <a href="{% url 'administration:match-details' result.match.slug %}">View</a>
+        </td>
+      </tr>
+      </tbody>
+      {% endfor %}
+    </table>
+  {% else %}
+    <div class="flex flex-col text-center w-full mb-10">
+        <p class="lg:w-2/3 mx-auto leading-relaxed text-base font-semibold">
+        NO RESULT AT THIS TIME...</p>
+    </div>
+  {% endif %}
 
 {% elif list_type == "fixtures" %}
   {% if queryset %}

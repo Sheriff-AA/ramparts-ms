@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic, View
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -323,4 +323,43 @@ class MatchEventCreateView(View):
             'match': match,
             **context,
         })
+
+
+class MatchEventDeleteConfirmView(View):
+    template_name = "administration/confirm_delete_match_event.html"
+    dashboard_template = "administration/dashboard.html"
+    
+    def get(self, request, *args, **kwargs):
+        """Display confirmation page for deleting a match event."""
+        event = get_object_or_404(MatchEvent, id=self.kwargs["event_id"])
+        match = event.match
+        
+        context = {
+            "event": event,
+            "match": match
+        }
+        
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.dashboard_template, {"content": self.template_name, **context})
+
+
+class MatchEventDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        """Handle the actual deletion after confirmation."""
+        event = get_object_or_404(MatchEvent, id=self.kwargs["event_id"])
+        match = event.match
+        match_slug = match.slug
+        
+        # Store details for success message
+        event_details = f"{event.player} - {event.event_type} (Minute: {event.minute})"
+        
+        # Delete the event
+        event.delete()
+        
+        messages.success(request, f"MatchEvent '{event_details}' deleted successfully.")
+        
+        # Redirect back to the match page
+        return redirect('administration:create-event', slug=match_slug)
     

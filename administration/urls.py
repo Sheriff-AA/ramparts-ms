@@ -2,7 +2,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 
-from .views import CompetitionCreateView, DashboardHomeView, MatchCreateView, PlayerCreateView, PlayerListView, MatchListView, MatchDetailView, MatchEventCreateView
+from .views import CompetitionCreateView, DashboardHomeView, MatchCreateView, PlayerCreateView, PlayerListView, MatchListView, MatchDetailView, MatchEventCreateView, MatchEventDeleteConfirmView, MatchEventDeleteView
 
 """
 BASE ENDPOINT /
@@ -21,5 +21,7 @@ urlpatterns = [
     # path('player-list/<slug:slug>', PlayerListView.as_view(), name='player-details'),
     path('match-list/', MatchListView.as_view(), name='match-list'),
     path('match/<slug:slug>', MatchDetailView.as_view(), name='match-details'),
+    path('event/<int:event_id>/delete/confirm/', MatchEventDeleteConfirmView.as_view(), name='match-event-delete-confirm'),
+    path('event/<int:event_id>/delete/', MatchEventDeleteView.as_view(), name='match-event-delete'),
 
 ]
