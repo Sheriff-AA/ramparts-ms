@@ -110,7 +110,7 @@ class Match(models.Model):
         Ensures that no player is both in the starting lineup and substitutes.
         The line-up cannot exceed 11 players.
         """
-        if self.line_up.count() > 11:
+        if len(self.line_up) > 11:
             raise ValidationError("A starting lineup can have at most 11 players.")
         
         overlap = set(self.line_up) & set(self.substitutes)
@@ -158,7 +158,7 @@ class MatchEvent(models.Model):
     player = models.CharField(max_length=255, blank=False, null=False)
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES, blank=False, null=False)
     minute = models.PositiveIntegerField(choices=MINUTES_CHOICES, blank=False, null=False)
-    additional_info = models.JSONField(default=dict, blank=True)
+    additional_info = models.CharField(max_length=250, blank=True)
 
     class Meta:
         ordering = ["minute"]
@@ -168,14 +168,14 @@ class MatchEvent(models.Model):
     def __str__(self):
         return f"{self.get_event_type_display()} by {self.player} at {self.minute}’ in match {self.match}" 
 
-    def clean(self):
-        """
-        Ensures that the player exists in the lineup or substitutes of the match.
-        Ensures that event minutes are within a valid range.
-        """
-        allowed_players = set(self.match.line_up + self.match.substitutes)
-        if self.player not in allowed_players:
-            raise ValidationError(f"Player {self.player} is not in the lineup or substitutes for this match.")
+    # def clean(self):
+    #     """
+    #     Ensures that the player exists in the lineup or substitutes of the match.
+    #     Ensures that event minutes are within a valid range.
+    #     """
+    #     allowed_players = set(self.match.line_up + self.match.substitutes)
+    #     if self.player not in allowed_players:
+    #         raise ValidationError(f"Player {self.player} is not in the lineup or substitutes for this match.")
 
     def save(self, *args, **kwargs):
         self.clean()

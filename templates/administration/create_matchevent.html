@@ -1,0 +1,61 @@
+<div id="messages-container">
+    {% include 'administration/message_alert.html' %}
+</div>
+
+<!-- Match Form -->
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    <div class="mx-auto max-w-2xl">
+        
+        <div class="text-center">
+        <h2 class="text-xl text-gray-800 font-bold sm:text-3xl dark:text-white">
+            Create event for match against {{ match }}
+        </h2>
+        </div>
+
+        <!-- Card -->
+        <div class="mt-5 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
+        <form method="post" hx-post="{% url 'administration:create-event' match.slug %}" hx-target="#dashboard-content" hx-swap="innerHTML">
+            {% csrf_token %}
+
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">Player</label>
+            {{ form.player }}
+                {% if form.player.errors %}
+                    <p class="text-sm text-red-500">{{ form.player.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Event Type</label>
+            {{ form.event_type }}
+                {% if form.event_type.errors %}
+                    <p class="text-sm text-red-500">{{ form.event_type.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Minute</label>
+            {{ form.minute }}
+                {% if form.minute.errors %}
+                    <p class="text-sm text-red-500">{{ form.minute.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Additional Info</label>
+            {{ form.additional_info }}
+                {% if form.additional_info.errors %}
+                    <p class="text-sm text-red-500">{{ form.additional_info.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mt-6 grid">
+            <button type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Submit</button>
+            </div>
+        </form>
+        </div>
+        <!-- End Card -->
+    </div>
+</div>
+<!-- End Comment Form -->
+

@@ -1,10 +1,9 @@
-from django.shortcuts import render
-from django.views import generic
+from django.shortcuts import render, get_object_or_404
+from django.views import generic, View
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.views import View
 
 
 from personnel.models import Player, Match, MatchEvent, Competition, Result 
@@ -254,6 +253,7 @@ class MatchListView(generic.ListView):
 
     #     return context
     
+
 class MatchDetailView(generic.DetailView):
     model = Match
     template_name = "matches/match_detail.html"
@@ -266,4 +266,53 @@ class MatchDetailView(generic.DetailView):
         context['match_events'] = match_events
         context['form'] = MatchEventCreateForm(initial={'match': match})
         return context
+
+
+class MatchEventCreateView(View):
+    template_name = "administration/create_matchevent.html"
+    dashboard_template = "administration/dashboard.html"
+
+
+    def get(self, request, *args, **kwargs):
+        """Return the correct response depending on whether the request is from HTMX."""
+        match = get_object_or_404(Match, slug=self.kwargs["slug"])
+        context = {
+            "form": MatchEventCreateForm(match=match),
+            "match": match
+            }
+
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.dashboard_template, {"content": self.template_name, **context})
+
+    def post(self, request, *args, **kwargs):
+        """Handle form submission while keeping the dashboard layout intact."""
+        match = get_object_or_404(Match, slug=self.kwargs["slug"])
+        form = MatchEventCreateForm(request.POST, match=match)
+        context = {"form": form, "match": match}
+
+        if form.is_valid():
+            event = form.save()
+            messages.success(request, "Event added successfully.")
+            context["form"] = MatchEventCreateForm(match=match)
+        
+
+            if request.htmx:
+                return render(request, self.template_name, context)
+            
+            return render(request, self.dashboard_template, {
+                "content": self.template_name,
+                **context,
+            })
+        
+        messages.error(self.request, "Error adding event.")
+        if request.htmx:
+            return render(request, self.template_name, {'match': match, **context})
+        
+        return render(request, self.dashboard_template, {
+            "content": self.template_name,
+            'match': match,
+            **context,
+        })
     

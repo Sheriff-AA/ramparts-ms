@@ -87,7 +87,7 @@
               </td>
           {% else %}
               <td class="px-3 py-3">
-              <a href="#">{{ fixture.versus_team }}</a>
+              <a href="#">{{ fixture.opposition_team }}</a>
               </td>
               <td class="px-3 py-3">
               <a href="{% url 'administration:match-details' fixture.slug %}">Rampart Celtic</a>
@@ -95,7 +95,7 @@
           {% endif %}
           <td class="px-3 py-3 text-lg text-gray-900">{{ fixture.match_date|date:"F d, Y, h:i A" }}</td>
           <td class="px-3 py-3 text-right text-lg underline text-blue-900">
-          <a href="#">Add event(s)</a>
+          <a href="{% url 'administration:create-event' fixture.slug %}">Add event(s)</a>
           </td>
           </tr>
         </tbody>

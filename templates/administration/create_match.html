@@ -55,6 +55,22 @@
                     <p class="text-sm text-red-500">{{ form.away_fixture.errors.as_text }}</p>
                 {% endif %}
             </div>
+            
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Possible Lineup
+            {{ form.selected_line_up }}
+                {% if form.selected_line_up.errors %}
+                    <p class="text-sm text-red-500">{{ form.selected_line_up.errors.as_text }}</p>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 sm:mb-8">
+            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Substitutes</label>
+            {{ form.selected_substitutes }}
+                {% if form.selected_substitutes.errors %}
+                    <p class="text-sm text-red-500">{{ form.selected_substitutes.errors.as_text }}</p>
+                {% endif %}
+            </div>
 
             <div class="mt-6 grid">
             <button type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Submit</button>

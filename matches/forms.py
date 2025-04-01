@@ -17,7 +17,7 @@ class MatchCreateForm(forms.ModelForm):
 
     class Meta:
         model = Match
-        fields = ['opposition_team', 'venue', 'match_date', 'competition', 'away_fixture']
+        fields = ['opposition_team', 'venue', 'match_date', 'competition', 'away_fixture',]
         widgets = {
             'competition': forms.Select(attrs={
                 'id': 'competition',
@@ -79,17 +79,51 @@ class MatchCreateForm(forms.ModelForm):
 class MatchEventCreateForm(forms.ModelForm):
     class Meta:
         model = MatchEvent
-        fields = ["match", "player", "event_type", "minute", "additional_info"]
+        fields = ["player", "event_type", "minute", "additional_info"]
+        widgets = {
+            'player': forms.Select(attrs={
+                'id': 'player',
+                'placeholder': 'Player', 
+                'class': 'py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600',
+            }),
+            'event_type': forms.Select(attrs={
+                'id': 'event-type',
+                'placeholder': 'Event Type', 
+                'class': 'py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600',
+            }),
+            'minute': forms.Select(attrs={
+                'id': 'minute',
+                'placeholder': 'Minute', 
+                'class': 'py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600',
+            }),
+            'additional_info': forms.TextInput(attrs={
+                'id': 'additional-info',
+                'placeholder': 'Additional Info', 
+                'class': 'py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600',
+            }),
+        }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, match=None, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance and self.instance.match:
-            allowed_players = self.instance.match.line_up + self.instance.match.substitutes
+
+        self.match = match  # From initial values
+
+        if self.match is None:
+            self.match = self.initial.get('match')
+
+        if self.match:
+            allowed_players = match.line_up + match.substitutes
             self.fields["player"].widget = forms.Select(choices=[(p, p) for p in allowed_players])
+    
+    def clean_match(self):
+        return self.match
 
     def clean_player(self):
         player = self.cleaned_data.get("player")
-        match = self.cleaned_data.get("match")
+        match = self.clean_match()
+
+        if not match:
+            raise ValidationError("A match must be selected before assigning a player.")
 
         if match:
             allowed_players = set(match.line_up + match.substitutes)
@@ -97,5 +131,15 @@ class MatchEventCreateForm(forms.ModelForm):
                 raise ValidationError(f"Player {player} is not in the lineup or substitutes for this match.")
 
         return player
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.match = self.match  # Set the match attribute on the instance
+        
+        if commit:
+            instance.save()
+        
+        return instance
+
 
 
