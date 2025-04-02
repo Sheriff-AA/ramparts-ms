@@ -75,3 +75,15 @@ class DisplayGamesListView(generic.ListView):
             template_name = 'matches/display_matches.html'
             return render(request, template_name, context)
     
+
+class DisplayMatchDetailView(generic.DetailView):
+    model = Match
+    template_name = "matches/display_details.html"
+    context_object_name = "match"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        match = self.get_object()
+        match_events = MatchEvent.objects.filter(match=match).order_by('minute')
+        context['match_events'] = match_events
+        return context

@@ -112,10 +112,20 @@ class PlayerDeleteConfirmView(View):
     def get(self, request, *args, **kwargs):
         """Display confirmation page for deleting a player."""
         player = get_object_or_404(Player, slug=self.kwargs["slug"])
+
+        matches = Match.objects.filter(is_fixture=True)[:20]  # Limit to first 20 matches
+    
+        player_in_lineup = False
+        for match in matches:
+            if player.name in match.line_up or player.name in match.substitutes:
+                player_in_lineup = True
+                break  # Exit loop as soon as we find one match
         
         context = {
             "player": player,
+            'player_in_lineup': player_in_lineup
         }
+        # context['player_in_lineup'] = player_in_lineup
         
         if request.htmx:
             return render(request, self.template_name, context)
@@ -628,3 +638,4 @@ class ResultCreateView(View):
         return render(request, self.template_name, {"form": form, "match": match})
     
 
+    

@@ -2,6 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+from cloudinary.models import CloudinaryField
+
 from utils.generators import unique_slugify
 from utils.generic_numgen import unique_gen
 from utils.current_year import current_year
@@ -52,6 +54,10 @@ BOOLEAN_CHOICES = (
     ('YES', 'Yes'),
     ('NO', 'No'),
 )
+
+class ImageControl(models.Model):
+    title = models.CharField(max_length=20)
+    image = CloudinaryField("image")
 
 
 class Player(models.Model):

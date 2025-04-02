@@ -76,14 +76,14 @@
                     <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                         <tr class="bg-white hover:bg-gray-50 dark:bg-neutral-900 dark:hover:bg-neutral-800">
                             <td class="size-px whitespace-nowrap">
-                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                            <button type="button" class="block">
                                 <span class="block px-6 py-2">
                                 <span class="font-mono text-sm text-blue-600 dark:text-blue-500"> Rampart Celtic - {{ result.team_score }}</span>
                                 </span>
                             </button>
                             </td>
                             <td class="size-px whitespace-nowrap">
-                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                            <button type="button" class="block">
                                 <span class="block px-6 py-2">
                                 <span class="text-sm text-gray-600 dark:text-neutral-400">{{ result.match.opposition_team }} - {{ result.opposition_score}}</span>
                                 </span>
@@ -101,7 +101,7 @@
                             </td>
                             {% elif result.opposition_score == result.team_score %}
                             <td class="size-px whitespace-nowrap">
-                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                            <button type="button" class="block">
                                 <span class="block px-6 py-2">
                                 <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-gray-100 text-black-800 dark:bg-gray-900 dark:text-white-200">
                                     Draw
@@ -111,7 +111,7 @@
                             </td>
                             {% else %}
                             <td class="size-px whitespace-nowrap">
-                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                            <button type="button" class="block">
                                 <span class="block px-6 py-2">
                                 <span class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
                                     Win
@@ -121,21 +121,22 @@
                             </td>
                             {% endif %}
                             <td class="size-px whitespace-nowrap">
-                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                            <button type="button" class="block">
                                 <span class="block px-6 py-2">
                                 <span class="text-sm text-gray-600 dark:text-neutral-400">{{ result.match.match_date|date:"F d, Y, h:i A" }}</span>
                                 </span>
                             </button>
                             </td>
                             <td class="size-px whitespace-nowrap">
-                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                            <button type="button" class="block">
                                 <span class="block px-6 py-2">
                                 <span class="text-sm text-gray-600 dark:text-neutral-400">{{ result.match.competition }}</span>
                                 </span>
                             </button>
                             </td>
                             <td class="size-px whitespace-nowrap">
-                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                            <form method="get" action="{% url 'matches:match-details' slug=result.match.slug %}">
+                            <button type="submit" class="block">
                                 <span class="px-6 py-1.5">
                                 <span class="py-1 px-2 inline-flex justify-center items-center gap-2 rounded-lg border border-gray-200 font-medium bg-white text-gray-700 shadow-2xs align-middle hover:bg-gray-50 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-white dark:focus:ring-offset-gray-800">
                                     <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -146,6 +147,7 @@
                                 </span>
                                 </span>
                             </button>
+                            </form>
                             </td>
                         </tr>
                     </tbody>

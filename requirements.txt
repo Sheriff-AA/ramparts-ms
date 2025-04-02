@@ -8,3 +8,6 @@ gunicorn
 django-htmx
 psycopg2
 django-compressor
+cloudinary
+pillow
+
