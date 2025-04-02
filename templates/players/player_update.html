@@ -12,7 +12,7 @@
         <!-- Card -->
         <div class="mt-5 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
         {% if player_in_lineup %}
-            <p class="sm:text-xl text-xl font-medium title-font mb-2 text-gray-900 dark:text-white">This player is currently in match lineups. Changes may affect those matches.</p>
+            <p class="sm:text-xl text-xl font-medium title-font mb-2 text-gray-900 dark:text-white">This player is currently in active match lineups. Changes may affect those matches.</p>
         {% else %}
             <form method="post" action="{% url 'administration:player-update' slug=player.slug %}">
                 {% csrf_token %}

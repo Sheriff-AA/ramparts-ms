@@ -98,8 +98,9 @@ class Match(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
-        new_slug = f"{unique_gen()}"
-        unique_slugify(self,new_slug)
+        if not self.slug:
+            new_slug = f"{unique_gen()}"
+            unique_slugify(self,new_slug)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -152,6 +153,8 @@ class MatchEvent(models.Model):
         ("Foul", "Foul"),
         ("Penalty", "Penalty"),
         ("Own Goal", "Own Goal"),
+        ('Halftime', 'Halftime'),
+        ('Fulltime', 'Fulltime'),
     ]
 
     match = models.ForeignKey("Match", on_delete=models.CASCADE, related_name="events")
@@ -163,7 +166,7 @@ class MatchEvent(models.Model):
     class Meta:
         ordering = ["minute"]
         verbose_name_plural = "Match Events"
-        unique_together = ('match', 'player', 'event_type', 'minute')
+        unique_together = ('player', 'event_type', 'minute')
 
     def __str__(self):
         return f"{self.get_event_type_display()} by {self.player} at {self.minute}’ in match {self.match}" 

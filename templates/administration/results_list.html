@@ -1,3 +1,7 @@
+<div id="messages-container">
+    {% include 'administration/message_alert.html' %}
+</div>
+
 <div id="matches-list" class="container px-5 py-6 mx-auto">
     <div class="flex flex-col text-center w-full mb-10">
         <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900 dark:text-white">Results</h1>
@@ -18,7 +22,7 @@
             {% for result in queryset %}
             <tbody>
             <tr>
-                {% if match.is_home %}
+                {% if result.match.away_fixture == "NO" %}
                     <td class="px-3 py-3">
                     <a href="{% url 'administration:match-details' result.match.slug %}">Rampart Celtic</a>
                     </td>

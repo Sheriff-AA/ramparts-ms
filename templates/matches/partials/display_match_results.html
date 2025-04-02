@@ -78,14 +78,14 @@
                             <td class="size-px whitespace-nowrap">
                             <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
                                 <span class="block px-6 py-2">
-                                <span class="font-mono text-sm text-blue-600 dark:text-blue-500">{{ results.match.slug }}</span>
+                                <span class="font-mono text-sm text-blue-600 dark:text-blue-500"> Rampart Celtic - {{ result.team_score }}</span>
                                 </span>
                             </button>
                             </td>
                             <td class="size-px whitespace-nowrap">
                             <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
                                 <span class="block px-6 py-2">
-                                <span class="text-sm text-gray-600 dark:text-neutral-400">{{ results.match.opposition_team }}</span>
+                                <span class="text-sm text-gray-600 dark:text-neutral-400">{{ result.match.opposition_team }} - {{ result.opposition_score}}</span>
                                 </span>
                             </button>
                             </td>
@@ -95,6 +95,16 @@
                                 <span class="block px-6 py-2">
                                 <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-green-200">
                                     Loss
+                                </span>
+                                </span>
+                            </button>
+                            </td>
+                            {% elif result.opposition_score == result.team_score %}
+                            <td class="size-px whitespace-nowrap">
+                            <button type="button" class="block" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-ai-invoice-modal" data-hs-overlay="#hs-ai-invoice-modal">
+                                <span class="block px-6 py-2">
+                                <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-xs font-medium bg-gray-100 text-black-800 dark:bg-gray-900 dark:text-white-200">
+                                    Draw
                                 </span>
                                 </span>
                             </button>

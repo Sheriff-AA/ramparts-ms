@@ -8,7 +8,7 @@ from django.contrib import messages
 
 from personnel.models import Player, Match, MatchEvent, Competition, Result 
 from matches.forms import MatchCreateForm, MatchEventCreateForm, MatchUpdateForm
-from personnel.forms import PlayerCreateForm, CompetitionCreateForm, PlayerUpdateForm
+from personnel.forms import PlayerCreateForm, CompetitionCreateForm, PlayerUpdateForm, ResultCreateForm
 
 
 class DashboardHomeView(generic.TemplateView):
@@ -151,7 +151,7 @@ class PlayerUpdateView(generic.UpdateView):
         
         # context['player_in_lineup'] = player_in_matches.exists()
         
-        matches = Match.objects.all()[:20]  # Limit to first 20 matches
+        matches = Match.objects.filter(is_fixture=True)[:20]  # Limit to first 20 matches
     
         player_in_lineup = False
         for match in matches:
@@ -289,9 +289,9 @@ class MatchUpdateView(generic.UpdateView):
         
 
     def get_success_url(self):
-        obj = Match.objects.get(slug=self.kwargs.get('slug'))
+        obj = self.get_object()
         messages.success(self.request, f"Match VS '{obj.opposition_team}' updated successfully.")
-        return reverse("administration:fixture-list")
+        return reverse("administration:fixtures-list")
 
 
 class PlayerListView(generic.ListView):
@@ -478,9 +478,8 @@ class MatchDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         match = self.get_object()
-        match_events = MatchEvent.objects.filter(match=match).order_by('event_time')
+        match_events = MatchEvent.objects.filter(match=match).order_by('minute')
         context['match_events'] = match_events
-        context['form'] = MatchEventCreateForm(initial={'match': match})
         return context
 
 
@@ -517,11 +516,20 @@ class MatchEventCreateView(View):
         }
 
         if form.is_valid():
-            event = form.save()
-            messages.success(request, "Event added successfully.")
-            context["form"] = MatchEventCreateForm(match=match)
-        
+            event = form.save(commit=False)
 
+            if event.event_type == "Fulltime":
+                existing_full_time = MatchEvent.objects.filter(match=match, event_type="Fulltime")
+                if existing_full_time.exists():
+                    existing_full_time.delete()
+                
+            event.save()
+            messages.success(request, "Event added successfully.")
+
+            if event.event_type == "Fulltime":
+                return redirect("administration:create-result", slug=match.slug)
+            
+            context["form"] = MatchEventCreateForm(match=match)
             if request.htmx:
                 return render(request, self.template_name, context)
             
@@ -579,3 +587,44 @@ class MatchEventDeleteView(View):
         # Redirect back to the match page
         return redirect('administration:create-event', slug=match_slug)
     
+
+def calculate_team_score(match):
+    """Calculate team score based on match events."""
+    return MatchEvent.objects.filter(match=match, event_type='Goal').count()
+
+
+class ResultCreateView(View):
+    template_name = "administration/create_results.html"
+    
+    def get(self, request, *args, **kwargs):
+        match = get_object_or_404(Match, slug=self.kwargs["slug"])
+        
+        if Result.objects.filter(match=match).exists():
+            messages.warning(request, "Result already exists for this match.")
+            return redirect("administration:match-details", slug=match.slug)
+        
+        initial_data = {"team_score": calculate_team_score(match)}
+        form = ResultCreateForm(initial=initial_data)
+        return render(request, self.template_name, {"form": form, "match": match})
+    
+    def post(self, request, *args, **kwargs):
+        match = get_object_or_404(Match, slug=self.kwargs["slug"])
+        form = ResultCreateForm(request.POST)
+        
+        if form.is_valid():
+            result = form.save(commit=False)
+            result.match = match
+            # result.team_score = calculate_team_score(match)  # Ensure correct team score
+
+            match.is_fixture = False
+            match.has_result = True
+            match.save()
+
+            result.save()
+            messages.success(request, "Result created successfully!")
+            return render(request, "administration/results_list.html")
+        
+        messages.error(request, "Error creating result.")
+        return render(request, self.template_name, {"form": form, "match": match})
+    
+
