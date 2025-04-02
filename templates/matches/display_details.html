@@ -33,7 +33,7 @@
                         {% for event in match_events %}
                         <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-neutral-200">{{ event.player }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{{ event.minute }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{{ event.minute }}'</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{{ event.event_type }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">{{ event.additional_info }}</td>                    
                         </tr>
@@ -44,6 +44,23 @@
                 </div>
             </div>
             </div>
+
+            <div class="max-w-2xl mx-auto text-center mb-10 lg:mb-14">
+                <h2 class="text-2xl font-bold md:text-4xl md:leading-tight dark:text-white">Lineup and Substitutes</h2>
+            </div>
+
+            <ul class="marker:text-blue-600 list-disc ps-5 space-y-2 text-sm text-gray-600 dark:text-neutral-400 mt-10">
+                {% for player in match.line_up %}
+                <li>
+                    {{ player }}
+                </li>
+                {% endfor %}
+                {% for player in match.substitutes %}
+                <li>
+                    {{ player }}
+                </li>
+                {% endfor %}
+            </ul>
 
         </div>
 
