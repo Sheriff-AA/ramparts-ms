@@ -11,44 +11,49 @@
 
         <!-- Card -->
         <div class="mt-5 p-4 relative z-10 bg-white border border-gray-200 rounded-xl sm:mt-10 md:p-10 dark:bg-neutral-900 dark:border-neutral-700">
-        <form method="post" action="{% url 'administration:player-update' slug=player.slug %}">
-            {% csrf_token %}
-            <div class="mb-4 sm:mb-8">
-            <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">First Name</label>
-            {{ form.first_name}}
-                {% if form.first_name.errors %}
-                    <p class="text-sm text-red-500">{{ form.first_name.errors.as_text }}</p>
-                {% endif %}
-            </div>
+        {% if player_in_lineup %}
+            <p class="sm:text-xl text-xl font-medium title-font mb-2 text-gray-900 dark:text-white">This player is currently in match lineups. Changes may affect those matches.</p>
+        {% else %}
+            <form method="post" action="{% url 'administration:player-update' slug=player.slug %}">
+                {% csrf_token %}
+                <div class="mb-4 sm:mb-8">
+                <label for="hs-feedback-post-comment-name-1" class="block mb-2 text-sm font-medium dark:text-white">First Name</label>
+                {{ form.first_name}}
+                    {% if form.first_name.errors %}
+                        <p class="text-sm text-red-500">{{ form.first_name.errors.as_text }}</p>
+                    {% endif %}
+                </div>
 
-            <div class="mb-4 sm:mb-8">
-            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Last Name</label>
-            {{ form.last_name }}
-                {% if form.last_name.errors %}
-                    <p class="text-sm text-red-500">{{ form.last_name.errors.as_text }}</p>
-                {% endif %}
-            </div>
+                <div class="mb-4 sm:mb-8">
+                <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Last Name</label>
+                {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        <p class="text-sm text-red-500">{{ form.last_name.errors.as_text }}</p>
+                    {% endif %}
+                </div>
 
-            <div class="mb-4 sm:mb-8">
-            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Preferred Name</label>
-            {{ form.name }}
-                {% if form.name.errors %}
-                    <p class="text-sm text-red-500">{{ form.name.errors.as_text }}</p>
-                {% endif %}
-            </div>
+                <div class="mb-4 sm:mb-8">
+                <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Preferred Name</label>
+                {{ form.name }}
+                    {% if form.name.errors %}
+                        <p class="text-sm text-red-500">{{ form.name.errors.as_text }}</p>
+                    {% endif %}
+                </div>
 
-            <div class="mb-4 sm:mb-8">
-            <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Position</label>
-            {{ form.position }}
-                {% if form.position.errors %}
-                    <p class="text-sm text-red-500">{{ form.position.errors.as_text }}</p>
-                {% endif %}
-            </div>
+                <div class="mb-4 sm:mb-8">
+                <label for="hs-feedback-post-comment-email-1" class="block mb-2 text-sm font-medium dark:text-white">Position</label>
+                {{ form.position }}
+                    {% if form.position.errors %}
+                        <p class="text-sm text-red-500">{{ form.position.errors.as_text }}</p>
+                    {% endif %}
+                </div>
 
-            <div class="mt-6 grid">
-            <button type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Submit</button>
-            </div>
-        </form>
+                <div class="mt-6 grid">
+                <button type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">Submit</button>
+                </div>
+            </form>
+        {% endif %}
+
         </div>
         <!-- End Card -->
     </div>

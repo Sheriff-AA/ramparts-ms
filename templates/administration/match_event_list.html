@@ -1,0 +1,54 @@
+<div id="matches-list" class="container px-5 py-6 mx-auto">
+    <div class="flex flex-col text-center w-full mb-10">
+        <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900 dark:text-white">Fixtures</h1>
+    </div>
+
+    <div>
+        {% if queryset %}
+            <table class="table-auto w-full text-left whitespace-no-wrap">
+            <thead>
+                <tr>
+                <th class="px-3 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Home team</th>
+                <th class="px-3 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Away team</th>
+                <th class="px-3 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Date</th>
+                <th class="px-3 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br"></th>
+                </tr>
+            </thead>
+            {% for fixture in queryset %}
+                <tbody class="dark:text-white">
+                <tr>
+                {% if fixture.away_fixture == "Yes" %}
+                    <td class="px-3 py-3">
+                    <a href="{% url 'administration:match-details' fixture.slug %}">Rampart Celtic</a>
+                    </td>
+                    <td class="px-3 py-3">
+                    <a href="#">{{ fixture.opposition_team }}</a>
+                    </td>
+                {% else %}
+                    <td class="px-3 py-3">
+                    <a href="#">{{ fixture.opposition_team }}</a>
+                    </td>
+                    <td class="px-3 py-3">
+                    <a href="{% url 'administration:match-details' fixture.slug %}">Rampart Celtic</a>
+                    </td>
+                {% endif %}
+                <td class="px-3 py-3 text-lg">{{ fixture.match_date|date:"F d, Y, h:i A" }}</td>
+                <td class="px-3 py-3 text-right text-lg underline text-blue-900">
+                <a href="#" hx-get="{% url 'administration:create-event' fixture.slug %}" hx-trigger="click" hx-target="#dashboard-content" hx-push-url="true">Add Events</a>
+                </td>
+                </tr>
+                </tbody>
+            {% endfor %}
+            </table>
+        {% else %}
+            <div class="flex flex-col text-center w-full mb-10">
+            <p class="lg:w-2/3 mx-auto leading-relaxed text-base font-semibold">
+                NO GAMES ADD EVENTS TO...
+            </p>
+            </div>
+        {% endif %}
+    </div>  
+</div>
+
+
+
