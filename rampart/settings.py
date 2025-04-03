@@ -109,15 +109,15 @@ DATABASES = {
     }
 }
 
-# DATABASE_URL = config("DATABASE_URL", cast=str)
+DATABASE_URL = config("DATABASE_URL", cast=str)
 
-# if DATABASE_URL is not None:
-#     DATABASES = {
-#     'default': dj_database_url.config(
-#         default=DATABASE_URL,
-#         conn_health_checks=True
-#         )
-# }
+if DATABASE_URL is not None:
+    DATABASES = {
+    'default': dj_database_url.config(
+        default=DATABASE_URL,
+        conn_health_checks=True
+        )
+}
 
 
 # Password validation
