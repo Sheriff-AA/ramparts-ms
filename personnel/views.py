@@ -26,3 +26,22 @@ class DisplayPlayersListView(generic.ListView):
             )
         return queryset
     
+
+class DisplayPlayerDetailView(generic.DetailView):
+    template_name = "players/display_player_detail.html"
+    context_object_name = "player"
+
+    def get_queryset(self):
+        return Player.objects.all()
+    
+    def get(self, request, *args, **kwargs):
+        """Return the correct response depending on whether the request is from HTMX."""
+        player = Player.objects.get(slug=self.kwargs['slug'])
+        context = {"player": player}
+
+
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, self.template_name, {**context})
+

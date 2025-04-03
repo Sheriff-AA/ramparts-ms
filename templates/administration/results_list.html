@@ -20,7 +20,7 @@
             </tr>
             </thead>
             {% for result in queryset %}
-            <tbody>
+            <tbody class="dark:text-white">
             <tr>
                 {% if result.match.away_fixture == "NO" %}
                     <td class="px-3 py-3">
@@ -57,7 +57,7 @@
                             {{ result.opposition_score }} : {{ result.team_score }}
                     </td>
                 {% endif %}
-                <td class="px-4 py-3 text-lg text-gray-900">
+                <td class="px-4 py-3 text-lg">
                 {{ result.match.match_date|date:"F d, Y, h:i A" }}</td>
                 <td class="px-4 py-3 text-lg underline text-blue-900">
                 <a href="{% url 'administration:match-details' result.match.slug %}">View</a>

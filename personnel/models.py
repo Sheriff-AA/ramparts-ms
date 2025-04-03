@@ -139,6 +139,7 @@ def max_value_current_year(value):
 class Competition(models.Model):
     category = models.CharField(max_length=120, choices=COMPETITION_CHOICES)
     year = models.IntegerField(validators=[MinValueValidator(2006), max_value_current_year])
+    is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

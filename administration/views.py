@@ -493,6 +493,20 @@ class MatchDetailView(generic.DetailView):
         return context
 
 
+    def get(self, request, *args, **kwargs):
+        """Return the correct response depending on whether the request is from HTMX."""
+        match = self.get_object()
+        match_events = MatchEvent.objects.filter(match=match).order_by('minute')
+        context = {"match_events": match_events}
+
+        dashboard_template = "administration/dashboard.html" 
+
+        if request.htmx:
+            return render(request, self.template_name, context)
+        
+        return render(request, dashboard_template, {"content": self.template_name, **context })
+
+
 class MatchEventCreateView(View):
     template_name = "administration/create_matchevent.html"
     dashboard_template = "administration/dashboard.html"

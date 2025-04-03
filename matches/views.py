@@ -50,11 +50,8 @@ class DisplayGamesListView(generic.ListView):
                 queryset = queryset.filter(Q(match_date__date=date))
             else:
                 queryset = queryset.filter(Q(match__match_date__date=date))
-
-        
+ 
         queryset = self.manual_pagination(request, queryset)
-
-
 
         context.update({
             "queryset": queryset,
