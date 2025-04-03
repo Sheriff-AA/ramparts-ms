@@ -20,6 +20,25 @@ class DashboardHomeView(generic.TemplateView):
         context['matches'] = Match.objects.all()
         context['competitions'] = Competition.objects.all()
         context['results'] = Result.objects.all()
+
+        wins = 0
+        losses = 0
+        draws = 0
+
+        # Loop through the queryset to calculate wins and losses
+        for result in context['results'][:30]:
+            if result.team_score > result.opposition_score:
+                wins += 1
+            elif result.team_score < result.opposition_score:
+                losses += 1
+            else:
+                draws += 1
+
+        # Add the calculated wins and losses to the context
+        context['wins'] = wins
+        context['losses'] = losses
+        context['draws'] = draws
+
         return context
 
 
