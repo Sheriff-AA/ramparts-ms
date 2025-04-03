@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_htmx',
-    'whitenoise',
+    # 'whitenoise',
 
     'personnel',
     'commandments',
@@ -68,7 +68,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -164,14 +164,14 @@ STATICFILES_DIRS = [
     STATICFILES_BASE_DIR
 ]
 STATIC_ROOT = BASE_DIR / 'local-cdn'
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    }
-}
+# STORAGES = {
+#     "default": {
+#         "BACKEND": "django.core.files.storage.FileSystemStorage",
+#     },
+#     "staticfiles": {
+#         "BACKEND": 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+#     }
+# }
 
 COMPRESS_ROOT = BASE_DIR / 'staticfiles'
 
