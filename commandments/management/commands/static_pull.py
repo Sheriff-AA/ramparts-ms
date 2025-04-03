@@ -11,6 +11,7 @@ VENDOR_STATICFILES = {
     "prelineIndex.js": "https://cdn.jsdelivr.net/npm/preline/dist/index.js",
     "htmx.min.js": "https://unpkg.com/htmx.org@2.0.4",
     "preline.min.css": "https://preline.co/assets/css/main.min.css",
+    "svg/figma/pen-drawing.svg": "https://preline.co/assets/svg/figma/pen-drawing.svg"
 }
 
 class Command(BaseCommand):
