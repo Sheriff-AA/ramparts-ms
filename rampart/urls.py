@@ -26,7 +26,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="base/landing_page.html"), name="home-page"
         ),
     path("404/", 
-        TemplateView.as_view(template_name="base/404.html"), name="error-page"
+        TemplateView.as_view(template_name="base/404_page.html"), name="error-page"
         ),
     path("administration/", include("administration.urls"), name="administration"),
     path("matches/", include("matches.urls"), name="matches"),

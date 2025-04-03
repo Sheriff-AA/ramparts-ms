@@ -87,3 +87,4 @@ class DisplayMatchDetailView(generic.DetailView):
         match_events = MatchEvent.objects.filter(match=match).order_by('minute')
         context['match_events'] = match_events
         return context
+
