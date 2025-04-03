@@ -33,11 +33,7 @@
                         </svg>
                     </div>
                     <input type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  bg-gray-400 border-gray-600 placeholder-gray-400 text-black-800 focus:ring-blue-500 focus:border-gray-500" placeholder="Select date"
-                    id="match-date" 
-                    name="match_date"
-                    hx-get="{% url 'matches:matches-list' %}"
-                    hx-trigger="keyup delay:500ms"
-                    hx-target="#matches-list">
+                    id="match-date" name="match_date" hx-get="{% url 'matches:matches-list' %}" hx-trigger="click" hx-target="#matches-list" hx-include="[name='list_type']">
                 </div>
             </div>
         </div>
@@ -65,13 +61,14 @@
 {% include 'base/js.html' %}
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    window.addEventListener("popstate", function(event) {
-        htmx.ajax('GET', window.location.pathname, { target: "#dashboard-content" });
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener("popstate", function(event) {
+            htmx.ajax('GET', window.location.pathname, { target: "#dashboard-content" });
+        });
     });
-});
 
-document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
         const fixturesBtn = document.getElementById("fixtures-btn");
         const resultsBtn = document.getElementById("results-btn");
 

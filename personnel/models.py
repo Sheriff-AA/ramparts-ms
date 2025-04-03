@@ -67,6 +67,7 @@ class Player(models.Model):
     slug = models.SlugField(null=True, blank=True, unique=True)
     position = models.CharField(max_length=30, blank=True, choices=PLAYER_POSITION, default="GK")
     created_at = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(null=True, blank=True)
 
     class Meta:
         ordering = ['last_name']
@@ -133,8 +134,10 @@ class Result(models.Model):
     def __str__(self):
         return f"{self.match}: {self.opposition_score} - {self.team_score}"
 
+
 def max_value_current_year(value):
     return MaxValueValidator(current_year())(value)  
+
 
 class Competition(models.Model):
     category = models.CharField(max_length=120, choices=COMPETITION_CHOICES)
