@@ -29,7 +29,17 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 DEBUG = config('DJANGO_DEBUG', cast=bool)
 
 
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = [
+    config("CSRF_TRUSTED_ORIGINS_1"), 
+    # config("CSRF_TRUSTED_ORIGINS_2"), 
+]
+
+
+ALLOWED_HOSTS = [
+    config("ALLOWED_HOST_1"), 
+    # config("ALLOWED_HOST_2"), 
+    # config("ALLOWED_HOST_3")
+]
 
 if DEBUG:
     ALLOWED_HOSTS += [
